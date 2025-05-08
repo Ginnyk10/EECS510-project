@@ -2,8 +2,8 @@
 * Prologue
 Created By: Ginny Ke
 Date Created: 5/7/2025
-Last Revised By: Ginny - added helper function to read gymlanguage.txt file 
-Date Revised: 5/7/2025
+Last Revised By: Jenna - added accept function to recognize string & reject otherwise
+Date Revised: 5/8/2025
 Purpose: testing function for our Gym Language 
 Input: gymlanguage.txt file and user input of a string
 Output: accept and the accepting path or reject 
@@ -21,12 +21,15 @@ def open_data(filename):
     transitions = {} # stores lines 5-18 as the transitions
     for state in states:
         transitions[state] = {}
+        for symbol in alphabet:
+            transitions[state][symbol] = [] #initialize empty list for each symbol
     
     for line in lines[4:]:
-        start, element, destination = line.split() #stores 1st as the start, 2nd as the element, and 3rd as the destination
-        if element not in transitions[start]:
-            transitions[state][element] = []
-        transitions[start][element].append(destination)
+        parts = line.split()
+        if len(parts) == 3:
+            start, element, destination = parts #stores 1st as the start, 2nd as the element, and 3rd as the destination
+            if element in alphabet: #verify symbol in alphabet
+                transitions[start][element].append(destination)
     
     return {
         "states": set(states),
@@ -34,10 +37,55 @@ def open_data(filename):
         "start_state": start_state,
         "accept_states": set(accept_states),
         "transitions": transitions
+
+        # "states": states,
+        # "alphabet": alphabet,
+        # "start_state": start_state,
+        # "accept_states": accept_states,
+        # "transitions": transitions
     }
+
+def accept(A, w):
+    # Start with initial path (empty transitions, starting state)
+    active_paths = [{
+        'states': {A['start_state']},
+        'transitions': []
+    }]
+    
+    for char in w:
+        new_paths = []
+        for path in active_paths:
+            next_states = set()
+            for state in path['states']:
+                if char in A['transitions'].get(state, {}):
+                    for next_state in A['transitions'][state][char]:
+                        # Create a new branch for each transition
+                        new_transitions = path['transitions'].copy()
+                        new_transitions.append(f"{state} {char} {next_state}")
+                        new_paths.append({
+                            'states': {next_state},
+                            'transitions': new_transitions
+                        })
+        
+        if not new_paths:
+            return "reject"
+        active_paths = new_paths
+    
+    # Check all completed paths
+    accepting_paths = []
+    for path in active_paths:
+        if path['states'] & A['accept_states']:
+            accepting_paths.append("\n".join(path['transitions']))
+    
+    if accepting_paths:
+        return "accept\n" + "\n".join(accepting_paths)
+    else:
+        return "reject"
+
 
 if __name__ == "__main__": # helped function that brings in the txt file and asks user for a string input
     data = open_data("gymlanguage.txt")
 
     user_input = input("Enter workout string (e.g., 'splrspl'): ")
-
+    result = accept(data, user_input)
+    print(result)
