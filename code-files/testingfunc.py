@@ -2,7 +2,7 @@
 * Prologue
 Created By: Ginny Ke
 Date Created: 5/7/2025
-Last Revised By: Ginny - added helper function to read gymlanguage.txt file
+Last Revised By: Ginny - added helper function to read gymlanguage.txt file 
 Date Revised: 5/7/2025
 Purpose: testing function for our Gym Language 
 Input: gymlanguage.txt file and user input of a string
