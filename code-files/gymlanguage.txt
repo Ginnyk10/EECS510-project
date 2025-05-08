@@ -1,8 +1,9 @@
+#line count begins with the first line of text without #
 #line 1: a list of the states separated by a whitespace
 #line 2: a list of the input elements separated by a whitespace (alphabet)
 #line 3: start state
 #line 4: accepting state
-#line 5-18: Transitions containing exactly one read element. If a transition reads #more than two, they are represented separately. The first space is the state that the #transition is leaving, followed by a whitespace, the second space is the element that #is being read, followed by a whitespace, and then the third space is the state that the #transition is going to.
+#line 5-18: Transitions containing exactly one read element. If a transition reads more than two, they are #represented separately. The first space is the state that the transition is leaving, followed by a whitespace, and the second space is the element that is being read, followed by a whitespace, and then the #third space is the state that the transition is going to.
 
 S F R L A
 s p r l
