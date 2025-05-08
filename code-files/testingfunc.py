@@ -55,6 +55,7 @@ def accept(A, w):
                 #check if current character has transitions from current state
                 if char in A['transitions'].get(state, {}):
                     #create new path for each transition
+                    #if a state has multiple transitions for a character it will create a new path for each option to choose the path best fit
                     for next_state in A['transitions'][state][char]:
                         #copy exisiting transition and append the new transition
                         new_transitions = path['transitions'].copy()
