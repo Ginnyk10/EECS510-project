@@ -37,46 +37,47 @@ def open_data(filename):
         "start_state": start_state,
         "accept_states": set(accept_states),
         "transitions": transitions
-
-        # "states": states,
-        # "alphabet": alphabet,
-        # "start_state": start_state,
-        # "accept_states": accept_states,
-        # "transitions": transitions
     }
 
 def accept(A, w):
-    # Start with initial path (empty transitions, starting state)
+    #start with initial path (empty transitions, starting state)
     active_paths = [{
         'states': {A['start_state']},
         'transitions': []
     }]
     
     for char in w:
-        new_paths = []
+        new_paths = [] #keep track of the different paths to take
+        
         for path in active_paths:
-            next_states = set()
+            # iterate over all current states
             for state in path['states']:
+                #check if current character has transitions from current state
                 if char in A['transitions'].get(state, {}):
+                    #create new path for each transition
                     for next_state in A['transitions'][state][char]:
-                        # Create a new branch for each transition
+                        #copy exisiting transition and append the new transition
                         new_transitions = path['transitions'].copy()
                         new_transitions.append(f"{state} {char} {next_state}")
+                        #create new path w/ updated state & transitions
                         new_paths.append({
                             'states': {next_state},
                             'transitions': new_transitions
                         })
         
+        #if there are no valid transitions, reject
         if not new_paths:
             return "reject"
-        active_paths = new_paths
+        active_paths = new_paths #update list of active paths to only successful transitions
     
-    # Check all completed paths
-    accepting_paths = []
+    #check all completed paths
+    accepting_paths = [] #stores all paths that reach an accept state
+    #iterate through all valid paths and if the path's current state intersects with accept states then append to accepting paths
     for path in active_paths:
         if path['states'] & A['accept_states']:
             accepting_paths.append("\n".join(path['transitions']))
     
+    #if accepting paths isn't empty, return accept with valid paths, else reject
     if accepting_paths:
         return "accept\n" + "\n".join(accepting_paths)
     else:
